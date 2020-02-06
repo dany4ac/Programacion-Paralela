@@ -1,0 +1,109 @@
+1) ¿Qué es un proceso de una computadora?
+   Proceso referido a las instrucciones que ejecutará 
+   el microprocesador mientras lee un programa determinado. 
+   Esto también implica a la memoria reservada y a sus contenidos, 
+   el estado de ejecución en determinado momento, y la información 
+   que permite al sistema operativo planificar.
+
+2) Explique a que se refieren cuando hablamos de una
+   comunicación punto a punto entre dos procesos, proponer
+   un ejemplo en código.
+   Es el mecanismo básico de transferencia de mensajes entre 
+   un par de procesos, uno enviando, y el otro, recibiendo. La
+   mayoría de los constructos de MPI están construidos alrededor 
+   de operaciones punto a punto; por lo tanto, esta sección es 
+   fundamental para el aprendizaje y uso de MPI. 
+
+   CODIGO: 
+   int rank, contador;
+    MPI_Status estado;
+
+    MPI_Init(&argc, &argv); // Inicializamos la comunicacion de los procesos
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Obtenemos el valor de nuestro identificador
+
+    //Envia y recibe mensajes
+    MPI_Send(&rank //referencia al vector de elementos a enviar
+            ,1 // tamaño del vector a enviar
+            ,MPI_INT // Tipo de dato que envias
+            ,rank // pid del proceso destino
+            ,0 //etiqueta
+            ,MPI_COMM_WORLD); //Comunicador por el que se manda
+
+    MPI_Recv(&contador // Referencia al vector donde se almacenara lo recibido
+            ,1 // tamaño del vector a recibir
+            ,MPI_INT // Tipo de dato que recibe
+            ,rank // pid del proceso origen de la que se recibe
+            ,0 // etiqueta
+            ,MPI_COMM_WORLD // Comunicador por el que se recibe
+            ,&estado); // estructura informativa del estado
+
+	cout<< "Soy el proceso "<<rank<<" y he recibido "<<contador<<endl;
+
+    MPI_Finalize();
+
+3) ¿Qué es la memoria RAM, Caché y Virtual? E indicar 
+   ¿Cómo funcionan?
+    *) Memoria RAM: Es utilizada por el sistema para procesar toda la información 
+       que pasa por nuestra PC, por lo cual todos los programas necesitan de ella 
+       para ejecutarse.
+       En la práctica podemos comprobar que a mayor cantidad de memoria RAM, más 
+       rápido será el procesamiento de los datos, y por ende nuestros trabajos se 
+       realizarán con mayor velocidad. No obstante, la memoria RAM debe estar acompañada 
+       de una motherboard adecuada, un procesador veloz y un disco rígido de buena 
+       capacidad y velocidad.
+    *) Memoria Caché: Es uno de los recursos con los que cuenta una CPU para almacenar 
+       temporalmente los datos recientemente procesados en un búfer especial, es decir, 
+       en una memoria auxiliar.
+    *) Memoria virtual: La memoria virtual permite simular una memoria RAM de mayor 
+       tamaño que la que tienes instalada en tu equipo. Es un mecanismo del cual se 
+       encarga el sistema operativo.
+
+4) ¿En que consiste la programación en memoria distribuida
+    y la programacion en memoria compartida?
+    *) Programación en memoria distribuida: La programación de memoria distribuida es 
+       una forma de programación paralela . Al ejecutar un programa de memoria distribuida, 
+       se ejecutan simultáneamente una serie de procesos, comúnmente conocidos como tareas. 
+       Cada tarea tiene su propio espacio de memoria privada, al que normalmente ninguna 
+       de las otras tareas puede acceder. 
+    *) Programacion en memoria compartida: Caracterizado porque todos los procesadores comparten 
+       un espacio común de direccionamiento:las variables declaradas como compartidas (“shared”). 
+       Existen otras variables propias de cada procesador: variables privadas (“private”).
+
+5) Describa e indicar los parametros de los siguientes
+   comandos del MPI:
+
+   a) MPI_Send(...): Realiza el envío de un mensaje de un proceso fuente a otro destino.
+	MPI_Send(&rank //referencia al vector de elementos a enviar
+                ,1 // tamaño del vector a enviar
+                ,MPI_INT // Tipo de dato que envias
+                ,rank+1 // pid del proceso destino
+                ,0 //etiqueta
+                ,MPI_COMM_WORLD); //Comunicador por el que se manda
+
+   b) MPI_Recv(...): Rutina de recibimiento de un mensaje desde un proceso.
+	MPI_Recv(&contador // Referencia al vector donde se almacenara lo recibido
+                ,1 // tamaño del vector a recibir
+                ,MPI_INT // Tipo de dato que recibe
+                ,rank-1 // pid del proceso origen de la que se recibe
+                ,0 // etiqueta
+                ,MPI_COMM_WORLD // Comunicador por el que se recibe
+                ,&estado); // estructura informativa del estado
+
+   c) MPI_Reduce(...): Reduce un valor de un grupo de procesos en un único proceso raíz.
+	MPI_Reduce(&mypi, // Valor local de PI
+		   &pi,  // Dato sobre el que vamos a reducir el resto
+		   1,	  // Numero de datos que vamos a reducir
+		   MPI_DOUBLE,  // Tipo de dato que vamos a reducir
+		   MPI_SUM,  // Operacion que aplicaremos
+		   0, // proceso que va a recibir el dato reducido
+		   MPI_COMM_WORLD); // Comunicador por el que se realiza la comunicación
+
+   d) MPI_Allreduce(...): Combina valores de todos los procesos y distribuye el resultado a todos los procesos.
+	MPI_Allreduce(void *sendbuf, // Dirección inicial del buffer en envío.
+                      void *recvbuf, // Dirección inicial del buffer de recepción.
+                      int count,    // Número de elementos que se va a enviar del buffer de envío (int).
+                      MPI_Datatype datatype, // Tipo de datos de los elementos del buffer de envío
+                      MPI_Op op, // Operación de reducción, constante definida por MPI
+                      MPI_Comm comm); // Comunicador por el que se realiza la comunicación
+
+
