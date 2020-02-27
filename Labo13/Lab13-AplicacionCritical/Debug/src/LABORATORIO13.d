@@ -1,0 +1,1 @@
+src/LABORATORIO13.o: ../src/LABORATORIO13.c
