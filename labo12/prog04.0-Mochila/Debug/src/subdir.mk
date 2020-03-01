@@ -3,21 +3,21 @@
 ################################################################################
 
 # Add inputs and outputs from these tool invocations to the build variables 
-C_SRCS += \
-../src/ELRIFAI_Omar_tp34.c 
+CPP_SRCS += \
+../src/mochila.cpp 
 
 OBJS += \
-./src/ELRIFAI_Omar_tp34.o 
+./src/mochila.o 
 
-C_DEPS += \
-./src/ELRIFAI_Omar_tp34.d 
+CPP_DEPS += \
+./src/mochila.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
-src/%.o: ../src/%.c
+src/%.o: ../src/%.cpp
 	@echo 'Building file: $<'
-	@echo 'Invoking: GCC C Compiler'
-	gcc -fopenmp -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	@echo 'Invoking: GCC C++ Compiler'
+	g++ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
